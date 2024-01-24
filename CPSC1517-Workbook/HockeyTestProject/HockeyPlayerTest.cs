@@ -32,7 +32,8 @@ namespace HockeyTestProject
 		const Shot PlayerShot = Shot.Left;
 		// The following relies on our being correct here - not writing a test for the test expected value
 		readonly int Age = (DateOnly.FromDateTime(DateTime.Now).DayNumber - new DateOnly(BirthYear, BirthMonth, BirthDay).DayNumber) / 365;
-		
+		string ToStringValue = $"{FirstName},{LastName},{JerseyNumber},{PlayerPosition},{PlayerShot},{HeightInInches},{WeightInPounds},Jan-14-1994,{BirthPlace.Replace(", ", "-")}";
+
 		// Can quickly run a test to check our method for AGE above
 		//[Fact]
 		//public void AGE_Is_Correct()
@@ -91,5 +92,16 @@ namespace HockeyTestProject
 			actual.Should().Be(Age);
 		}
 
+		[Fact]
+		public void HockeyPlayer_ToString_ReturnsCorrectValue()
+		{
+			// Arrange 
+			HockeyPlayer player = CreateTestHockeyPlayer();
+			// Act
+			string actual = player.ToString();
+
+			// Assert
+			actual.Should().Be(ToStringValue);
+		}
 	}
 }
