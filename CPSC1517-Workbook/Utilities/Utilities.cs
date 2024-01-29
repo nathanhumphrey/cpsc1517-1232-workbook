@@ -15,6 +15,15 @@
 		// ==============================================================================
 
 		/// <summary>
+		/// Checks that a value is in the range of min and max (inclusive)
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
+		/// <returns>True if the value is in the range (inclusive of min and max) or false otherwise</returns>
+		public static bool IsInRange(int value, int min, int max) => value >= min && value <= max;
+
+		/// <summary>
 		/// Tests for a positive int value
 		/// </summary>
 		/// <param name="value"></param>
@@ -59,11 +68,20 @@
 		/// <returns>True if zero or negative, false otherwise</returns>
 		public static bool IsZeroOrNegative(int value) => value <= 0;
 
-		// The following two methods are named the same, but have differing method
+		// The following methods are named the same as the ones above, but have differing method
 		// signatures. This is technique is known as overloading methods. In this
 		// way, we can call the same method but passing in different parameters,
 		// which enables the system to determine which version of the method to execute.
 		// Read more here: https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/member-overloading
+
+		/// <summary>
+		/// Checks that a value is in the range of min and max (inclusive)
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
+		/// <returns>True if the value is in the range (inclusive of min and max) or false otherwise</returns>
+		public static bool IsInRange(double value, double min, double max) => value >= min && value <= max;
 
 		/// <summary>
 		/// Tests for a positive double value
@@ -92,6 +110,15 @@
 		/// <param name="value"></param>
 		/// <returns>True if zero or negative, false otherwise</returns>
 		public static bool IsZeroOrNegative(double value) => value <= 0.0;
+
+		/// <summary>
+		/// Checks that a value is in the range of min and max (inclusive)
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
+		/// <returns>True if the value is in the range (inclusive of min and max) or false otherwise</returns>
+		public static bool IsInRange(decimal value, decimal min, decimal max) => value >= min && value <= max;
 
 		/// <summary>
 		/// Tests for a positive decimal value
