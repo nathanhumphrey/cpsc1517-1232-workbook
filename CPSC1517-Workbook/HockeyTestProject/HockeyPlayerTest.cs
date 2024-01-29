@@ -63,21 +63,68 @@ namespace HockeyTestProject
 			actual.Should().NotBeNull();
 		}
 
-		// Failing HockeyPlayer constructor - TODO: create InlineData lines for remaining properties
+		// Failing HockeyPlayer constructor
 		[Theory]
 		[InlineData("", LastName, BirthPlace, BirthYear, BirthMonth, BirthDay, WeightInPounds, HeightInInches, JerseyNumber, PlayerPosition, PlayerShot, "First name cannot be null or empty.")]
 		[InlineData(" ", LastName, BirthPlace, BirthYear, BirthMonth, BirthDay, WeightInPounds, HeightInInches, JerseyNumber, PlayerPosition, PlayerShot, "First name cannot be null or empty.")]
 		[InlineData(null, LastName, BirthPlace, BirthYear, BirthMonth, BirthDay, WeightInPounds, HeightInInches, JerseyNumber, PlayerPosition, PlayerShot, "First name cannot be null or empty.")]
+		[InlineData(FirstName, "", BirthPlace, BirthYear, BirthMonth, BirthDay, WeightInPounds, HeightInInches, JerseyNumber, PlayerPosition, PlayerShot, "Last name cannot be null or empty.")]
+		[InlineData(FirstName, " ", BirthPlace, BirthYear, BirthMonth, BirthDay, WeightInPounds, HeightInInches, JerseyNumber, PlayerPosition, PlayerShot, "Last name cannot be null or empty.")]
+		[InlineData(FirstName, null, BirthPlace, BirthYear, BirthMonth, BirthDay, WeightInPounds, HeightInInches, JerseyNumber, PlayerPosition, PlayerShot, "Last name cannot be null or empty.")]
+		[InlineData(FirstName, LastName, "", BirthYear, BirthMonth, BirthDay, WeightInPounds, HeightInInches, JerseyNumber, PlayerPosition, PlayerShot, "Birth place cannot be null or empty.")]
+		[InlineData(FirstName, LastName, " ", BirthYear, BirthMonth, BirthDay, WeightInPounds, HeightInInches, JerseyNumber, PlayerPosition, PlayerShot, "Birth place cannot be null or empty.")]
+		[InlineData(FirstName, LastName, null, BirthYear, BirthMonth, BirthDay, WeightInPounds, HeightInInches, JerseyNumber, PlayerPosition, PlayerShot, "Birth place cannot be null or empty.")]
+		[InlineData(FirstName, LastName, BirthPlace, BirthYear, BirthMonth, -1, WeightInPounds, HeightInInches, JerseyNumber, PlayerPosition, PlayerShot, "Date of birth cannot be in the future.")]
+		[InlineData(FirstName, LastName, BirthPlace, BirthYear, BirthMonth, BirthDay, -1, HeightInInches, JerseyNumber, PlayerPosition, PlayerShot, "Weight must be positive.")]
+		[InlineData(FirstName, LastName, BirthPlace, BirthYear, BirthMonth, BirthDay, 0, HeightInInches, JerseyNumber, PlayerPosition, PlayerShot, "Weight must be positive.")]
+		[InlineData(FirstName, LastName, BirthPlace, BirthYear, BirthMonth, BirthDay, WeightInPounds, -1, JerseyNumber, PlayerPosition, PlayerShot, "Height must be positive.")]
+		[InlineData(FirstName, LastName, BirthPlace, BirthYear, BirthMonth, BirthDay, HeightInInches, 0, JerseyNumber, PlayerPosition, PlayerShot, "Height must be positive.")]
 		public void HockeyPlayer_GreedyConstructor_ThrowsException(string firstName, string lastName, string birthPlace,
 			int birthYear, int birthMonth, int birthDay, int weightInPounds, int heightInInches, int jerseyNumber, Position position, Shot shot, string errMsg)
 		{
+			DateOnly dateOfBirth;
 
-			// Arrange
-			Action act = () => new HockeyPlayer(firstName, lastName, birthPlace, new DateOnly(birthYear, birthMonth, birthDay), weightInPounds, heightInInches, jerseyNumber, position, shot);
+			if (birthDay == -1)
+			{
+				// Test for tomorrow
+				dateOfBirth = DateOnly.FromDateTime(DateTime.Now).AddDays(1);
+			}
+            else
+            {
+                dateOfBirth = new DateOnly(birthYear, birthMonth, birthDay);
+            }
+
+            // Arrange
+            Action act = () => new HockeyPlayer(firstName, lastName, birthPlace, dateOfBirth , weightInPounds, heightInInches, jerseyNumber, position, shot);
 
 			// Act/Assert
 			act.Should().Throw<ArgumentException>().WithMessage(errMsg);
 		}
+		[Theory]
+		[InlineData(1)]
+		[InlineData(98)]
+		public void HockeyPlayer_JerseyNumber_GoodSetAndGet(int expected)
+		{
+			HockeyPlayer player = CreateTestHockeyPlayer();
+
+			player.JerseyNumber = expected;
+			int actual = player.JerseyNumber;
+
+			actual.Should().Be(expected);
+		}
+
+		[Theory]
+		[InlineData(0)]
+		[InlineData(99)]
+		public void HockeyPlayer_JerseyNumber_BadSetThrows(int value)
+		{
+			HockeyPlayer player = CreateTestHockeyPlayer();
+
+			Action act = () => player.JerseyNumber = value;
+
+			act.Should().Throw<ArgumentException>();
+		}
+
 
 		[Fact]
 		public void HockeyPlayer_Age_ReturnsCorrectAge()
@@ -102,6 +149,63 @@ namespace HockeyTestProject
 
 			// Assert
 			actual.Should().Be(ToStringValue);
+		}
+
+		[Fact]
+		public void HockeyPlayer_Parse_ParsesCorrectly()
+		{
+			HockeyPlayer actual;
+			string line = ToStringValue;
+			actual = HockeyPlayer.Parse(line);
+
+			actual.Should().BeOfType<HockeyPlayer>();
+			// TODO: could also check each individual property for correct assignment
+
+		}
+
+		[Theory]
+		[InlineData(null, "Line cannot be null or empty.")]
+		[InlineData("", "Line cannot be null or empty.")]
+		[InlineData(" ", "Line cannot be null or empty.")]
+
+		public void HockeyPlayer_Parse_ThrowsForNullEmptyOrWhiteSpaceLine(string line, string errMsg)
+		{
+			Action act = () => HockeyPlayer.Parse(line);
+
+			act.Should().Throw<ArgumentNullException>().WithMessage(errMsg);
+
+		}
+
+		[Theory]
+		[InlineData("one", "Incorrect number of fieds.")]
+		public void HockeyPlayer_Parse_ThrowsForInvalidNumberOfFields(string line, string errMsg)
+		{
+			Action act = () => HockeyPlayer.Parse(line);
+
+			act.Should().Throw<InvalidDataException>().WithMessage(errMsg);
+
+		}
+
+		[Theory]
+		[InlineData("one,two,three,four,five,six,seven,eight,nine", "Error parsing line")]
+		public void HockeyPlayer_Parse_ThrowsForFormatError(string line, string errMsg)
+		{
+			Action act = () => HockeyPlayer.Parse(line);
+
+			act.Should().Throw<FormatException>().WithMessage($"*{errMsg}*");
+
+		}
+
+		[Fact]
+		public void HockeyPlayer_TryParse_ParsesCorrectly()
+		{
+			HockeyPlayer? actual = null;
+			bool result;
+
+			result = HockeyPlayer.TryParse(ToStringValue, out actual);
+
+			result.Should().BeTrue();
+			actual.Should().NotBeNull();
 		}
 	}
 }
