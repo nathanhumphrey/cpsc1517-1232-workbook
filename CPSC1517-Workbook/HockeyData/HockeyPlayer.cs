@@ -32,6 +32,10 @@ namespace Hockey.Data
 		// private Shot _shot;
 		private string _birthPlace;
 
+		// Constants
+		private const int _MinJerseyNumber = 1;
+		private const int _MaxJerseyNumber = 98;
+
 		// Constructor
 		// Constructors are used to initialize an instance of the class.
 		// The result purpose for implementing a constructor is to ensure that the data
@@ -312,7 +316,7 @@ namespace Hockey.Data
 
 			set
 			{
-				if (value < 1 || value > 98)
+				if (value < _MinJerseyNumber || value > _MaxJerseyNumber)
 				{
 					throw new ArgumentException("Jersey number must be between 1 and 98.");
 				}
