@@ -198,7 +198,7 @@ namespace HockeyTestProject
 		}
 
 		[Fact]
-		public void HockeyPlayer_TryParse_ParsesCorrectly()
+		public void HockeyPlayer_TryParse_ParsesTrueCorrectly()
 		{
 			HockeyPlayer? actual = null;
 			bool result;
@@ -207,6 +207,18 @@ namespace HockeyTestProject
 
 			result.Should().BeTrue();
 			actual.Should().NotBeNull();
+		}
+
+		[Fact]
+		public void HockeyPlayer_TryParse_ParsesFalseCorrectly()
+		{
+			HockeyPlayer? actual = null;
+			bool result;
+
+			result = HockeyPlayer.TryParse("", out actual);
+
+			result.Should().BeFalse();
+			actual.Should().BeNull();
 		}
 	}
 }
