@@ -177,7 +177,8 @@ namespace HockeyTestProject
 		}
 
 		[Theory]
-		[InlineData("one", "Incorrect number of fieds.")]
+		[InlineData("one,two,three,four,five,six,seven,eight", "Incorrect number of fieds.")]
+		[InlineData("one,two,three,four,five,six,seven,eight,nine,ten", "Incorrect number of fieds.")]
 		public void HockeyPlayer_Parse_ThrowsForInvalidNumberOfFields(string line, string errMsg)
 		{
 			Action act = () => HockeyPlayer.Parse(line);
