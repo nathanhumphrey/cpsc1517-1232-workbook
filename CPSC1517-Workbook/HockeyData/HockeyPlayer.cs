@@ -365,7 +365,7 @@ namespace Hockey.Data
 			// Validate
 			if (string.IsNullOrWhiteSpace(line))
 			{
-				throw new ArgumentNullException("Line cannot be null or empty.", new ArgumentException());
+				throw new ArgumentNullException("Line cannot be null or empty.", "line");
 			}
 
 			// Split on commas that are not within double-quoted strings
