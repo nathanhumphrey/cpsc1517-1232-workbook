@@ -164,9 +164,9 @@ namespace HockeyTestProject
 		}
 
 		[Theory]
-		[InlineData(null, "Line cannot be null or empty.")]
-		[InlineData("", "Line cannot be null or empty.")]
-		[InlineData(" ", "Line cannot be null or empty.")]
+		[InlineData(null, "*Line cannot be null or empty.*")]
+		[InlineData("", "*Line cannot be null or empty.*")]
+		[InlineData(" ", "*Line cannot be null or empty.*")]
 
 		public void HockeyPlayer_Parse_ThrowsForNullEmptyOrWhiteSpaceLine(string line, string errMsg)
 		{
