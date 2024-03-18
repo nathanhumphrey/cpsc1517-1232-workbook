@@ -41,6 +41,18 @@ namespace WestWindSystem
 				// performed from within the assembly, which this class (BackEndExtensions) is.
 				return new CustomerServices(context!);
 			});
+
+			services.AddTransient<ProductServices>((serviceProvider) =>
+			{
+				var context = serviceProvider.GetService<WestWindContext>();
+				return new ProductServices(context!);
+			});
+
+			services.AddTransient<CategoryServices>((serviceProvider) =>
+			{
+				var context = serviceProvider.GetService<WestWindContext>();
+				return new CategoryServices(context!);
+			});
 		}
 	}
 }
