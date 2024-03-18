@@ -1,0 +1,16 @@
+﻿@page "/customer/{CustomerId}"
+
+<h3>CustomerPage</h3>
+
+@if (CurrentCustomer != null)
+{
+	<div>
+		<p>@CurrentCustomer.ContactName</p>
+	</div>
+}
+else
+{
+	<div class="alert alert-info">
+		<p>No customer found @(string.IsNullOrWhiteSpace(CustomerId) ? "" : $"with id = {CustomerId}")</p>
+	</div>
+}
