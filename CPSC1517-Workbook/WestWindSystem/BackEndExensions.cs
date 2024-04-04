@@ -53,6 +53,13 @@ namespace WestWindSystem
 				var context = serviceProvider.GetService<WestWindContext>();
 				return new CategoryServices(context!);
 			});
+
+			// APRIL 3rd
+			services.AddTransient<SupplierServices>((serviceProvider) =>
+			{
+				var context = serviceProvider.GetService<WestWindContext>();
+				return new SupplierServices(context!);
+			});
 		}
 	}
 }

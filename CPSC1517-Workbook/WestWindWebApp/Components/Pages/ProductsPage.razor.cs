@@ -27,6 +27,9 @@ namespace WestWindWebApp.Components.Pages
 		[Parameter]
 		public int CategoryId { get; set; }
 
+		// Used for partial product name or category name search
+		public string PartialSearch { get; set; }
+
 		// Perform the database load asynchronously
 		protected override Task OnInitializedAsync()
 		{
@@ -52,6 +55,19 @@ namespace WestWindWebApp.Components.Pages
 			{
 				Products = ProductServices.GetProductsByCategoryId(CategoryId);
 				NavigationManager.NavigateTo($"/products/{CategoryId}");
+			}
+		}
+
+		/// <summary>
+		/// Load the products that match the partial search on product name or category name
+		/// </summary>
+		public void HandlePartialSearch()
+		{
+			if (!string.IsNullOrWhiteSpace(PartialSearch))
+			{
+				Products = ProductServices.GetProductsByNameOrSupplierName(PartialSearch);
+				CategoryId = 0;
+				NavigationManager.NavigateTo($"/products");
 			}
 		}
 	}

@@ -26,8 +26,10 @@ namespace WestWindSystem.BLL
 		/// <returns>A list of products, if any matches were found</returns>
 		public List<Product>? GetProductsByCategoryId(int id)
 		{
-			return _context.Products.Where(p => p.CategoryId == id)
+			return _context.Products
 				.Include(p => p.Supplier)
+				.Where(p => p.CategoryId == id)
+				.OrderBy(p => p.ProductName)
 				.ToList<Product>();
 		}
 
@@ -47,6 +49,7 @@ namespace WestWindSystem.BLL
 			return _context.Products
 				.Include(p => p.Supplier)
 				.Where(p => p.ProductName.ToLower().Contains(partial) || p.Supplier.CompanyName.ToLower().Contains(partial))
+				.OrderBy(p => p.ProductName)
 				.ToList<Product>();
 		}
 
@@ -60,6 +63,54 @@ namespace WestWindSystem.BLL
 			return _context.Products
 				.Where(p => p.ProductId == id)
 				.FirstOrDefault();
+		}
+
+		// APRIL 3rd
+
+		/// <summary>
+		/// Adds a new product to the system
+		/// </summary>
+		/// <param name="product">The product to add</param>
+		public void AddProduct(Product product)
+		{
+			if (product == null)
+			{
+				throw new ArgumentNullException("Product argument cannot be null.", new ArgumentException());
+			}
+
+			_context.Products.Add(product);
+			_context.SaveChanges();
+
+		}
+
+		/// <summary>
+		/// Updates an existing product in the system
+		/// </summary>
+		/// <param name="product"></param>
+		public void UpdateProduct(Product product)
+		{
+			if (product == null)
+			{
+				throw new ArgumentNullException("Product argument cannot be null.", new ArgumentException());
+			}
+
+			_context.Products.Update(product);
+			_context.SaveChanges();
+		}
+
+		/// <summary>
+		/// Marks a product as discontinued in the system
+		/// </summary>
+		/// <param name="product">The product to discontinue</param>
+		public void DiscontinueProduct(Product product)
+		{
+			if (product == null)
+			{
+				throw new ArgumentNullException("Product argument cannot be null.", new ArgumentException());
+			}
+
+			product.Discontinued = true;
+			UpdateProduct(product);
 		}
 	}
 }
