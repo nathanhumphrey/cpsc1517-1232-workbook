@@ -24,7 +24,11 @@ namespace WestWindSystem
 
 			// Register the context service
 			// "options" contains the connection string information
-			services.AddDbContext<WestWindContext>(options);
+			// The SericeLifetime.Transient arg specifies that a separate 
+			// instance of DbContent be provided for each request, helpful
+			// when performing asynchronous calls on DbContext (e.g. from
+			// multiple threads).
+			services.AddDbContext<WestWindContext>(options, ServiceLifetime.Transient);
 
 			// Register EACH service class (BLL classes)
 			// Each service class will have an AddTransient<T>() method call
